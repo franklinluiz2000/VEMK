@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}Cadastre-se{% endblock %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static 'authentication/css/register.css' %}">
+
+{% endblock %}
+
+{% block 'body' %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <div class="logo_sidebar">
+                    
+                    <h2 class="logo">
+                        <img class="img_logo_sidebar" src="{% static 'authentication/img/vemknovo1.PNG' %}">
+                    </h2>
+
+                </div>
+
+                
+            </div>
+
+            <div class="col-md-9">
+                <div class="register_area">
+                    <h2 class="title">Seja bem vindo</h2>
+                    <p class="sub-title">Crie sua conta</p>
+                    <hr>
+                    {% if messages %}
+				<br>
+                    {% for message in messages %}
+                                <div class="alert {{message.tags}}">
+                                    {{message}}
+                                </div>
+                            {% endfor %}
+                    {% endif %}
+                    
+                    <form action={% url "register" %} method="POST"> {% csrf_token %}
+                        <span class="bold">Nome de usuário</span>
+                        <input class="form-control input-form" name="username" type="text" placeholder="Digite seu nome...">
+                        <br>
+                        <span class="bold">E-mail</span>
+                        <input class="form-control input-form" name="email" type="text" placeholder="Digite seu E-mail...">
+                        <br>
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Senha</span>
+                                <input class="form-control input-form" name="password" type="password" placeholder="Digite sua password...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">Confirmar senha</span>
+                                <input class="form-control input-form" name="confirm_password" type="password" placeholder="Confirme sua senha...">
+                            </div>
+                        </div>
+                        <br>
+                        <button class="btn-first">Registrar</button>
+
+                    </form>
+                    
+                    <h3 style="position: absolute; font-weight: bold">Já possui uma conta ?&nbsp <a href={% url "login" %} class="btn btn-outline-success btn-lg">Login</a> </h3>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+{% endblock %}
