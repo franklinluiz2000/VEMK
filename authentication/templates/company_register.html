@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}Cadastre-se{% endblock %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static 'authentication/css/company.css' %}">
+
+{% endblock %}
+
+{% block 'body' %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <div class="logo_sidebar">                    
+                    <h2 class="logo">
+                        <img class="img_logo_sidebar" src="{% static 'authentication/img/vemknovo1.PNG' %}">
+                    </h2>
+                </div>               
+            </div>
+            <div class="col-md-9">
+                <div class="register_area">
+                    <h2 class="title">Seja bem vindo</h2>
+                    <p class="sub-title">Cadastre sua empresa agora</p>
+                    <hr>
+                    {% if messages %}
+				<br>
+                    {% for message in messages %}
+                                <div class="alert {{message.tags}}">
+                                    {{message}}
+                                </div>
+                            {% endfor %}
+                    {% endif %}
+                    
+                    <form action={% url "company_register" %} method="POST"> {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Nome da sua empresa:</span>
+                                <input class="form-control input-form" name="name" type="text" placeholder="Digite o nome da sua empresa...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">CNPJ:</span>
+                                <input class="form-control input-form" name="cnpj" type="number" placeholder="Digite o cnpj da sua empresa...">
+                            </div>
+                        </div>
+                        <br>            
+                        
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Telefone:</span>
+                                <input class="form-control input-form" name="phone" type="number" placeholder="Digite seu número de telefone...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">Email:</span>
+                                <input class="form-control input-form" name="email" type="text" placeholder="Diigte o seu email...">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Endereço:</span>
+                                <input class="form-control input-form" name="address" type="text" placeholder="Digite o seu endereço...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">CEP:</span>
+                                <input class="form-control input-form" name="cep" type="number" placeholder="Digite o seu cep...">
+                            </div>
+                        </div>
+                        <br>    
+                                           
+                        
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Cidade:</span>
+                                <input class="form-control input-form" name="city" type="text" placeholder="Digite aqui sua cidade...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">Plano a ser contratado:</span>
+                                <select name="plan" class="form-control">
+                                    {% comment %} <option value="1">Grátis</option> {% endcomment %}
+                                    <option value="2">Básico</option>
+                                    <option value="3">Premium</option>
+                                </select>
+                            </div>
+                        </div>                       
+                        
+                        <br> 
+
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Senha</span>
+                                <input class="form-control input-form" name="password" type="password" placeholder="Digite sua senha...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">Confirmar senha</span>
+                                <input class="form-control input-form" name="confirm_password" type="password" placeholder="Confirme sua senha...">
+                            </div>
+                        </div>
+                        <br>
+
+                        <button class="btn-first">Cadastrar</button>
+
+                    </form>
+                    
+                    <h3 style="position: absolute; font-weight: bold; padding: 50px">Já possui uma conta ?&nbsp <a href={% url "company_login" %} class="btn btn-outline-success btn-lg">Login</a> </h3>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
