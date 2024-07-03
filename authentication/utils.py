@@ -4,22 +4,18 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from django.contrib.auth.models import User
+from .models import Company
 import re
 import phonenumbers
 import requests
-from django.core.validators import EmailValidator
-from django.core.validators import validate_email
-import dns.resolver
 
-
-
-
+# validando senhas
 def password_is_valid(request, password, confirm_password):
     if len(password) < 6:
         messages.add_message(request, constants.ERROR, 'Sua senha deve conter 6 ou mais caractertes')
         return False
-    print(password)
-    print(confirm_password)
+   
     if not password == confirm_password:
         messages.add_message(request, constants.ERROR, 'As senhas não coincidem!')
         return False
@@ -38,37 +34,23 @@ def password_is_valid(request, password, confirm_password):
 
     return True
 
-
-def email_html(path_template: str, subject: str, to: list, **kwargs) -> dict:
-    
-    html_content = render_to_string(path_template, kwargs)
-    text_content = strip_tags(html_content)
-
-    email = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, to)
-
-    email.attach_alternative(html_content, "text/html")
-    email.send()
-    return {'status': 1}
-
-
-
+# validando número de telefone
 def valid_phone_number(phone_number):  
+    if not phone_number.isnumeric():
+        return False
+    try:
+        # Tenta passar o número de telefone usando a biblioteca phonenumbers.
+        numero_fone_parseado = phonenumbers.parse(phone_number, "BR")
+        # Valida se o número de telefone é válido.
+        if phonenumbers.is_valid_number(numero_fone_parseado):
+            return True
+        else:
+            return False
+    except phonenumbers.NumberParseException:
+        # Se o número de telefone não puder ser passar, ele é inválido.
+        return False
 
-  try:
-    # Tenta passar o número de telefone usando a biblioteca phonenumbers.
-    numero_fone_parseado = phonenumbers.parse(phone_number, "BR")
-
-    # Valida se o número de telefone é válido.
-    if phonenumbers.is_valid_number(numero_fone_parseado):
-      return True
-    else:
-      return False
-
-  except phonenumbers.NumberParseException:
-    # Se o número de telefone não puder ser passar, ele é inválido.
-    return False
-
-
+# validando cep
 def is_valid_cep(cep):
     # Removendo espaços e hifens
     cep = cep.replace(" ", "").replace("-", "")
@@ -86,58 +68,136 @@ def is_valid_cep(cep):
         else:
             return True
     else:
+        return False 
+
+# Validando cnpj
+def valida_cnpj(_cnpj):
+ 
+    # Remove caracteres especiais
+    cnpj = apenas_numeros(_cnpj)
+
+    # Valida o tamanho do CNPJ
+    if len(cnpj) != 14:
         return False
+
+    # Separa os dígitos do CNPJ
+    digitos = list(cnpj)
+
+    # Calcula o primeiro dígito verificador
+    soma1 = 0
+    for indice, digito in enumerate(digitos[:12]):
+        soma1 += int(digito) * (13 - indice)
+    soma1 = soma1 % 11
+    if soma1 == 0:
+        digitos.append('0')
+    else:
+        digitos.append(str(11 - soma1))
+
+    # Calcula o segundo dígito verificador
+    soma2 = 0
+    for indice, digito in enumerate(digitos):
+        soma2 += int(digito) * (14 - indice)
+    soma2 = soma2 % 11
+    if soma2 == 0:
+        digitos.append('0')
+    else:
+        digitos.append(str(11 - soma2))
+
+    # Compara os dígitos verificadores calculados com os dígitos informados
+    if digitos[12] != digitos[13] or digitos[13] != digitos[14]:
+        return False
+
+    return Tru
+
+
+######################################### VALIDANDO DADOS DE USUÁRIO #########################################
+
+def user_valid_data(request, username, email, password, confirm_password):
+    # verifica espaços em branco
+    if (len(username.strip()) == 0) or (len(email.strip()) == 0) or (len(password.strip()) == 0) or (len(confirm_password.strip()) == 0):
+            messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
+            return False
+    
+    # Verifica se usuários já existem
+    verifyName = User.objects.filter(username=username).first()  
+    verifyEmail = User.objects.filter(email=email).first()
+
+    if len(username) < 3:
+        messages.add_message(request, constants.ERROR, "O nome do usuário é preciso no mínimo 3 caracteres")
+        return False
+    elif verifyName is not None:
+        messages.add_message(request, constants.ERROR, "Este usuário já existe")
+        return False
+    elif verifyEmail is not None:
+        messages.add_message(request, constants.ERROR, "Este email já está sendo usado por outro usuário")
+        return False    
+    
+    # Verificador de senha
+    if not password_is_valid(request, password, confirm_password):
+            return False
+    
+    print("Sua empresa passou por todas as validações!")
+    return True
+######################################### VALIDANDO OS DADOS DA EMPRESA #######################################
+
+def company_valid_data(request ,name, cnpj, phone, email, address, cep, city, plan, password, confirm_password):
+    if (len(name.strip()) == 0) or (len(cnpj.strip()) == 0) or (len(phone.strip()) == 0) or (len(email.strip()) == 0) or (len(address.strip()) == 0 or (len(city.strip()) == 0)or (len(plan.strip()) == 0)):
+            messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
+            return False
+   
+    # Verifica se o cnpj é válido   
+    # if not valida_cnpj(cnpj):
+    #     messages.add_message(request, constants.ERROR,"Digite um cnpj válido.")
+    #     return False
+        
+    # Verifica se o número de telefone é válido    
+    if not valid_phone_number(phone):
+        messages.add_message(request, constants.ERROR, "Digite um número de telefone válido")
+        return False  
+    
+    # validadno o email
+ 
+    
+    # Verifica se o CEP é válido
+    
+    # if not is_valid_cep(cep):
+    #     messages.add_message(request, constants.ERROR, "Digite um CEP válido")
+    #     return False
+    
+    # verifica se já existe um usuário com algum desses dados
+    verifyName = Company.objects.filter(name=name).first()
+    verifyCnpj = Company.objects.filter(cnpj=cnpj).first()
+    verifyEmail = Company.objects.filter(email=email).first()
+
+    if len(name) < 3:
+        messages.add_message(request, constants.ERROR, "O nome do usuário é preciso no mínimo 3 caracteres")
+        return False
+    elif verifyName is not None:
+        messages.add_message(request, constants.ERROR, "Este usuário já existe")
+        return False
+    elif verifyCnpj is not None:
+        messages.add_message(request, constants.ERROR, "Este cnpj já está cadastrado")
+        return False
+    elif verifyEmail is not None:
+        messages.add_message(request, constants.ERROR, "Este email já está sendo usado por outro usuário")
+        return False    
+
+    # verifica se a senha é válida
+    if not password_is_valid(request, password, confirm_password):
+        return False  
     
 
+    return True 
+    
+######################################### VALIDANDO OS DADOS DA EMPRESA #######################################   
+# ATIVAÇÃO DE CONTA   
+def email_html(path_template: str, subject: str, to: list, **kwargs) -> dict:
+    
+    html_content = render_to_string(path_template, kwargs)
+    text_content = strip_tags(html_content)
 
+    email = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, to)
 
-def validate_cnpj(cnpj):
-    cnpj_regex = re.compile(r"^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$")
-    # Remove caracteres especiais
-    cnpj = cnpj.replace(".", "").replace("/", "").replace("-", "")
-
-    # Valida o formato geral
-    if not cnpj_regex.match(cnpj):
-        return False
-
-    # Cálculo dos dígitos verificadores
-    soma1 = 0
-    soma2 = 0
-    for i, digit in enumerate(cnpj):
-        digit = int(digit)
-        soma1 += (i + 1) * digit
-        if i < 13:
-            soma2 += digit
-
-    soma1 = 11 - (soma1 % 11) if soma1 % 11 != 0 else 0
-    soma2 = 11 - (soma2 % 11) if soma2 % 11 != 0 else 0
-
-    # Verifica se os dígitos verificadores conferem
-    if cnpj[-2:] != f"{soma1}{soma2}":
-        return False
-
-    return True
-
-
-# Validando o email
-def validate_email_with_domain(email_address):    
-    try:
-        # verifica o formato (sintaxe)
-        validate_email(email_address)
-    except:
-        return False
-
-    # Ssepara somente o dominio
-    domain = email_address.split('@')[-1]
-
-    # verifica se o dominio existe
-    try:
-        mx_records = dns.resolver.query(domain, 'MX')
-    except dns.resolver.NXDOMAIN:
-        return False
-
-    # retorna se o dominio não é valido
-    if not mx_records:
-        return False
-
-    return True
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+    return {'status': 1}
