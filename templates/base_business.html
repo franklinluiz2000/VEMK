@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static  %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static 'business/css/css.css' %}">
+
+{% endblock %}
+
+{% block 'body' %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <a href="{% url 'companys' %}" class="link-lateral">
+                    <div class="card-lateral">
+                        {% comment %} <img src="{% static 'business/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <br>
+                        <br>
+                  
+                        <h3>Minhas empresas cadastradas</h3>
+                    </div>
+                  </a>
+                  
+                  <a href="company_list" class="link-lateral">
+                    <div class="card-lateral">
+                        {% comment %} <img src="{% static 'plataforma/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <br>
+                        <br>
+                  
+                        <h3>visualizar produtos</h3>
+                    </div>
+                  </a>
+                  
+                  <a href="#" class="link-lateral">
+                    <div class="card-lateral">
+                        {% comment %} <img src="{% static 'plataforma/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <br>
+                        <br>
+                  
+                        <h3>Outros</h3>
+                    </div>
+                  </a>
+
+            </div>
+
+            <div class="col-md-8">
+                {% block 'business' %}
+
+
+                {% endblock %}
+            </div>
+
+        </div>
+    </div>
+{% endblock%}

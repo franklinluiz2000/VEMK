@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.contrib.auth.models import User
-from .models import Company
+from business.models import Company
 import re
 import phonenumbers
 import requests
@@ -140,10 +140,10 @@ def user_valid_data(request, username, email, password, confirm_password):
     return True
 ######################################### VALIDANDO OS DADOS DA EMPRESA #######################################
 
-def company_valid_data(request ,name, cnpj, phone, email, address, cep, city, plan, password, confirm_password):
-    if (len(name.strip()) == 0) or (len(cnpj.strip()) == 0) or (len(phone.strip()) == 0) or (len(email.strip()) == 0) or (len(address.strip()) == 0 or (len(city.strip()) == 0)or (len(plan.strip()) == 0)):
-            messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
-            return False
+def company_valid_data(request, name_company, cnpj, phone, address, cep, city, state):
+    # if (len(name_company.strip()) == 0) or (len(cnpj.strip()) == 0) or (len(phone.strip()) == 0) or (len(state.strip()) == 0) or (len(address.strip()) == 0 or (len(city.strip()) == 0)):
+    #         messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
+    #         return False
    
     # Verifica se o cnpj é válido   
     # if not valida_cnpj(cnpj):
@@ -154,8 +154,7 @@ def company_valid_data(request ,name, cnpj, phone, email, address, cep, city, pl
     if not valid_phone_number(phone):
         messages.add_message(request, constants.ERROR, "Digite um número de telefone válido")
         return False  
-    
-    # validadno o email
+       
  
     
     # Verifica se o CEP é válido
@@ -165,31 +164,24 @@ def company_valid_data(request ,name, cnpj, phone, email, address, cep, city, pl
     #     return False
     
     # verifica se já existe um usuário com algum desses dados
-    verifyName = Company.objects.filter(name=name).first()
+    verifyName = Company.objects.filter(name_company=name_company).first()
     verifyCnpj = Company.objects.filter(cnpj=cnpj).first()
-    verifyEmail = Company.objects.filter(email=email).first()
+  
 
-    if len(name) < 3:
-        messages.add_message(request, constants.ERROR, "O nome do usuário é preciso no mínimo 3 caracteres")
-        return False
-    elif verifyName is not None:
+    # if len(name_company) < 3:
+    #     messages.add_message(request, constants.ERROR, "O nome do usuário é preciso no mínimo 3 caracteres")
+    #     return False
+    if verifyName is not None:
         messages.add_message(request, constants.ERROR, "Este usuário já existe")
         return False
     elif verifyCnpj is not None:
         messages.add_message(request, constants.ERROR, "Este cnpj já está cadastrado")
         return False
-    elif verifyEmail is not None:
-        messages.add_message(request, constants.ERROR, "Este email já está sendo usado por outro usuário")
-        return False    
-
-    # verifica se a senha é válida
-    if not password_is_valid(request, password, confirm_password):
-        return False  
-    
+     
 
     return True 
     
-######################################### VALIDANDO OS DADOS DA EMPRESA #######################################   
+  
 # ATIVAÇÃO DE CONTA   
 def email_html(path_template: str, subject: str, to: list, **kwargs) -> dict:
     

@@ -1,0 +1,160 @@
+{% extends 'base_business.html' %}
+{% load static %}
+
+{% block 'business' %}
+
+    {% if messages %}
+        <br>
+        {% for message in messages %}
+            <div class="alert {{message.tags}}">
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <img src="business/img/perfil2.png" alt="Foto de produto">
+    <div class="row">
+
+        <div class="col-md-8">
+            <img id="company-profile-data" src="{% static 'business/img/empresa1.jpg' %}">
+            
+            
+        </div> 
+        <div>  
+            <h4><b>Nome:</b> {{company.name_company}}</h4>
+            <h6><b>CNPJ:</b> {{company.cnpj}}</h6>
+            <h6><b>Telefone:</b> {{company.phone}}</h6>
+            <h6><b>Endereço:</b> {{company.address}}</h6>
+            <h6><b>Cidade:</b> {{company.city}}</h6>
+            <h6><b>Estado:</b> {{company.state}}</h6>
+            <h6><b>Plano contratado:</b> {{company.chosen_plan}}</h6>
+        </div>
+    </div>
+    <hr>
+    
+
+
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+        Adicionar produto
+    </button>
+    <br>
+    <br>
+    <img src="business/img/perfil2.png" alt="Foto de produto">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Nome do produto</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Descrição</th>
+            </tr>
+        </thead>
+        
+        {% for product in products  %}
+        
+            <tbody>
+                <tr>
+                    <th scope="row">{{product.product_name}}</th>
+                    <td>{{product.category}}</td>
+                    <td>{{product.price}}</td>
+                    <td>{{product.description}}</td>
+                    <td></td>
+                </tr>            
+            </tbody>
+        {% endfor %}
+    </table>
+        
+
+
+    {% comment %}  {% endcomment %}
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="titulo">Cadastrar produto</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    
+                    <form action="{% url 'company_data' company.id %}" method="POST">{% csrf_token %}
+                       
+                        <div class="form-row">
+                            <div class='col-md'>
+                            
+                                    <label for="validationServerUsername">Nome do produto:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nome do produto..." name="product_name">                                       
+                                    </div>
+                                                            
+                            </div>
+
+                            <div class='col-md'>
+                            
+                                    <label for="validationServerUsername">Categoria: </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Categoria do produto..." name="category">                                        
+                                    </div>
+                                                            
+                            </div>
+
+                            
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class='col-md'>
+                            
+                                    <label for="validationServerUsername">Valor do produto</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="Valor do produto..." name="price">                                        
+                                    </div>
+                                                            
+                            </div>
+
+                            <div class='col-md'>
+                            
+                                    <label for="validationServerUsername">Descrição do produto</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Descrição do produto..." name="description">                                        
+                                    </div>
+                                                            
+                            </div>
+
+                            
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class='col-md' style="padding:30px;">
+                            
+                                
+                                <input type="file" name="image" accept="image/*" required="" id="id_img">
+                                                            
+                            </div>
+
+                            <div class='col-md'>                            
+                                    
+                                                            
+                            </div>
+
+                            
+                        </div>
+
+
+                       
+
+                        <br>
+
+                        <input type="submit" value="Cadastrar" class="btn btn-success">
+
+                    </form>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+        
+{% endblock%}
