@@ -13,21 +13,16 @@
     {% endfor %}
 {% endif %}
 
-    <br>
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-        Nova empresa
-    </button>
-    <br>
-    <br>
-
     <div class="row">
-        {% for company in companys%}
+        {% for company in companys %}
             <div class="col-md-4">
                 <a href="{% url 'company_data' company.id  %}" class="link-hover">
                     <div id="card-business" >
                         <div class="foto-perfil" >
                             
-                                <img id="company-profile" src="{% static 'business/img/empresa1.jpg' %}" >                                                          
+                            {% if company.image %}
+                                <img src="{{ company.image.url }}" alt="Imagem da minha empresa">
+                            {% endif %}                                                         
                            
                         </div>
                         <br>
@@ -41,102 +36,39 @@
         {% endfor %}
     </div>
 
-
-
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title titulo" id="exampleModalLabel">Cadastrar empresa</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          
-          <div class="modal-body">
-              <form action="" method="POST">{% csrf_token %}
-
-
-                  <div class="row">
-
-                    <div class="col-md-3">
-                          <img src="{% static 'business/img/perfil2.png' %}">
-                    </div>
-
-                    <div class="col-md-9">
-                          <label>Nome:</label>
-                          <input type="text" placeholder="Digite o nome da empresa..." class="form-control" name="name_company">
-                    </div>
-
-                  </div>
-                  
-                  <div class="row">
-
-                    <div class="col-md-6">
-                        <label>Cnpj:</label>
-                        <input type="text" placeholder="Digite o cnpj da empresa..." class="form-control" name="cnpj">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>Telefone:</label>
-                        <input type="text" placeholder="Digite o telefone da empresa..." class="form-control" name="phone">
-                    </div>
-
+    <br>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+        Nova empresa
+    </button>
+    <br>
+    <br>
+    
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title titulo" id="exampleModalLabel">Cadastrar empresa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-
-                  <br>
-
-                <div class="row">
-
-                    <div class="col-md-6">
-                        <label>Endereço:</label>
-                        <input type="text" placeholder="Digite o endereço da empresa..." class="form-control" name="address">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>CEP:</label>
-                        <input type="text" placeholder="Digite o CEP da empresa..." class="form-control" name="cep">
-                    </div>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-6">
-                        <label>cidade:</label>
-                        <input type="text" placeholder="Digite a cidade da empresa..." class="form-control" name="city">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>Estado:</label>
-                        <input type="text" placeholder="Digite o Estado da empresa..." class="form-control" name="state">
-                    </div>
-
-                </div>
-
-                  <br>
                 
-                <div class="row">
+                <div class="modal-body">
+                    <form action="{% url 'companys' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <table>
+                    {{form.as_table}}
+                    </table>
+                    <br>
                     <div class="col-md-6">
-                        <label>Plano Contratado:</label>
-                        <select name="plan" class="form-control">
-                            <option value="1">Grátis</option>
-                            <option value="2">Básico</option>
-                            <option value="3">Premium</option>
-                        </select>
-                    </div>
+                        <input type="submit" class="btn btn-success btn-lg" >
+                    </div>                  
                     
+                    </form>
                 </div>
-                <br>
-                <div class="col-md-6">
-                    <input type="submit" class="btn btn-success btn-lg" value="Registar">
-                </div>                  
-              
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
-{% endblock%}
-
-
+            </div>
+        </div>
+    </div>
+  {% endblock%}
+  
+  
+  

@@ -4,77 +4,78 @@ from django.contrib.auth.decorators import login_required
 from authentication.utils import company_valid_data
 from .models import Company, Product, Category
 from django.contrib import messages
+from .forms import ProductForm, CompanyForm
 
 
 @login_required(login_url='/auth/login/')
-def company_list(request):
-    
+def company_list(request):    
+    companys = Company.objects.filter(linked_user=request.user)
     if request.method == "GET":
-        companys = Company.objects.filter(linked_user=request.user)
-        return render(request, 'companys.html', {'companys': companys})
-
-    elif request.method == "POST":
+        form = CompanyForm()       
+        context = {
+            'companys': companys,
+            'form': form
+        }
+        return render(request, template_name="companys.html", context=context)        
         
-        name_company = request.POST.get('name_company')
-        cnpj = request.POST.get('cnpj')
-        state = request.POST.get('state')
-        address = request.POST.get('address')
-        cep = request.POST.get('cep')
-        city = request.POST.get('city')
-        phone = request.POST.get('phone')
-        chosen_plan = request.POST.get('plan')
-        image = request.POST.get('image')
+   
+    elif request.method == "POST":
+        form = CompanyForm(request.POST, request.FILES)       
+        if form.is_valid(): 
+            company = form.save(commit=False)
+            company.linked_user = request.user     # associa a empresa ao usuário logado    
+            form.save()
+            messages.add_message(request, messages.constants.SUCCESS, f"Parabéns {request.user}! Você acabou de cadastrar sua empresa!")
+        else:
+            form = CompanyForm() 
+            messages.add_message(request, messages.constants.ERROR, "ERRO interno do sistema!")
+        context = {
+            'form': form,    
+            'company': company              
+        }
 
-        if not  company_valid_data(request, name_company, cnpj, phone, address, cep, city, state):
-            return redirect('/company_list')              
+        return render(request, 'companys.html', context=context)
+    
+
      
-    try:    
-        
-        company = Company.objects.create(name_company=name_company, cnpj=cnpj, phone=phone, address=address, cep=cep, city=city, state=state, chosen_plan=chosen_plan, linked_user=request.user, image=image)
-        company.save()
-
-        messages.add_message(request, messages.constants.SUCCESS, 'Sua empresa foi cadastrada com sucesso')
-        return redirect('/company_list')
-   
-    except:
-        messages.add_message(request, messages.constants.ERROR, 'Erro interno do sistema')
-        return redirect('/company_list/')
-
 
 @login_required(login_url='/auth/login/')
-def company_data(request, id):
-    company = get_object_or_404(Company, id=id)
-    if not company.linked_user == request.user:
-        messages.add_message(request, messages.constants.ERROR, 'Esse empresa não é sua')
-        return redirect('/company_data/')
-        
-    if request.method == "GET":
-        products = Product.objects.filter(linked_company=company)
-        return render(request, 'company_data.html', {'company': company, 'products': products})
+def company_data(request, id=None):
 
-        # return render(request, 'company_data.html', {'company': company})
+    company = get_object_or_404(Company, id=id)
+    product = Product()
+    teste = request.POST.get('price')
+
+    # Caso a requisão seja get mostrar os produtos cadastrados na tela
+    if request.method == "GET":
+            form = ProductForm()
+            products = Product.objects.filter(linked_company=company.id)
+            print(products)
+            context = {
+                'products': products,
+                'form': form,
+                'company': company,
+            }
+            return render(request, template_name="company_data.html", context=context)
+    
+    # Se a requisição for post validar o formulario  
     
     elif request.method == "POST":
-        product_name = request.POST.get('product_name')
-        category = request.POST.get('category')
-        price = request.POST.get('price')
-        description = request.POST.get('description')
-        img=request.POST.get('image')
-  
-   
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            print("form valido")
+            product = form.save(commit=False)
+            product.linked_company = company    # associa a empresa ao usuário logado    
+            form.save()
+            messages.add_message(request, messages.constants.SUCCESS, f"Parabéns, {request.user}! O produto foi adicionado com sucesso!")
+            return redirect(f"/company_data/{company.id}")
+    else:
+        form = ProductForm()
+        messages.add_message(request, messages.constants.ERROR, "ERRO interno do sistema!")
+    context = {
+        'company': company,
+        'form': form,
+        
+    } 
 
-    try: 
-        category_object = Category.objects.filter(category=category).first()
-        if category_object is None:
-            category_object = Category.objects.create(category=category)
-            category_object.save()          
-
-        product = Product.objects.create(product_name=product_name, category=category_object, price=price, description=description, linked_company=company, img=img)
-        product.save()
-
-        messages.add_message(request, messages.constants.SUCCESS, f"O produto {product_name} foi cadastrado com sucesso!")       
-        return redirect(f'/company_data/{company.id}')
-
-    except:
-        messages.add_message(request, messages.constants.ERROR, "ERRO interno do sistema! Por favor entre em contato com o administrador")
-        return redirect(f'/company_data/{company.id}')
+    return render(request, 'company_data.html', context=context)
