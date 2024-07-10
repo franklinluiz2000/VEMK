@@ -3,6 +3,9 @@
 {% load static %}
 
 {% block 'business' %}
+<br>
+<br>
+<br>
 
 {% if messages %}
 <br>
@@ -21,15 +24,14 @@
                         <div class="foto-perfil" >
                             
                             {% if company.image %}
-                                <img src="{{ company.image.url }}" alt="Imagem da minha empresa">
+                                <img height="120" weight="120" style="margin: 20px;" src="{{ company.image.url }}" alt="Imagem da minha empresa">
                             {% endif %}                                                         
                            
                         </div>
                         <br>
-                        <p class="dados">Nome: {{company.name_company}}</p>
-                        <p class="dados">Cnpj: <br>{{company.cnpj}}</p>
-                        <p class="dados">Telefone: {{company.phone}}</p>
-                        <p class="dados">Plano: {{company.chosen_plan}}</p>
+                        <p class="dados">{{company.name_company}}</p>
+                     
+                        <h3><a href={% url "delete_company" company.id %} class="btn btn-outline-danger btn-lg">Delete</a> </h3>
                     </div>
                 </a>
             </div>

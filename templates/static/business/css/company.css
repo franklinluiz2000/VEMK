@@ -21,7 +21,7 @@ body{
 
 .sidebar{
 
-    {% comment %} background-image: url("/static/autenticacao/img/fundo_background.png"); {% endcomment %}
+    background-image: url("/business/img/caixa.png");
 
 }
 

@@ -14,37 +14,47 @@
             <div class="col-md-2">
                 <a href="{% url 'companys' %}" class="link-lateral">
                     <div class="card-lateral">
-                        {% comment %} <img src="{% static 'business/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <img width="150" height="150" src="{% static 'business/img/home.png' %}">
                         <br>
                         <br>
                   
-                        <h3>Minhas empresas cadastradas</h3>
+                        <h2>Home</h2>
                     </div>
                   </a>
                   
                   <a href="" class="link-lateral">
                     <div class="card-lateral">
-                        {% comment %} <img src="{% static 'plataforma/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <img width="150" height="150" src="{% static 'business/img/uniao2.png' %}">
                         <br>
                         <br>
                   
-                        <h3>visualizar produtos</h3>
+                        <h2>Empresa</h2>
                     </div>
                   </a>
                   
                   <a href="#" class="link-lateral">
                     <div class="card-lateral">
-                        {% comment %} <img src="{% static 'plataforma/img/vemknovo1.PNG' %}"> {% endcomment %}
+                        <img width="150" height="150" src="{% static 'business/img/entregador.png' %}">
                         <br>
                         <br>
                   
-                        <h3>Outros</h3>
+                        <h2>Entregador</h2>
+                    </div>
+                  </a>
+
+                  <a href="#" class="link-lateral">
+                    <div class="card-lateral">
+                        <img width="150" height="150" src="{% static 'business/img/carrinho.png' %}">
+                        <br>
+                        <br>
+                  
+                        <h2>Carrinho</h2>
                     </div>
                   </a>
 
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-10">
                 {% block 'business' %}
 
 

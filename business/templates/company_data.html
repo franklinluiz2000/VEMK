@@ -15,9 +15,9 @@
  
     <div class="row">
 
-        <div class="col-md-8">
+        <div class="col-md-4">
             {% if company.image %}
-            <img id="company-profile-data" src="{{company.image.url}}">
+            <img width="300" height="200"  src="{{company.image.url}}">
             {% endif %}
             
         </div> 
@@ -35,7 +35,7 @@
     
 
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal1">
         Adicionar produto
     </button>
     <br>
@@ -45,9 +45,7 @@
         <thead>
             <tr>
             <th scope="col">Nome do produto</th>
-            <th scope="col">Categoria</th>
             <th scope="col">Valor</th>
-            <th scope="col">Descrição</th>
             </tr>
         </thead>
         
@@ -56,10 +54,10 @@
             <tbody>
                 <tr>
                     <th scope="row">{{product.product_name}}</th>
-                    <td>{{product.category}}</td>
                     <td>{{product.price}}</td>
-                    <td>{{product.description}}</td>
-                    <td><img src="{{ product.image.url }}" alt="{{ product.product_name }}"></td>
+                    <td><img  width="60" height="60"  src="{{ product.image.url }}" alt="{{ product.product_name }}"></td>
+                    <td><h3><a href={% url "product_view" product.id %} class="btn btn-outline-info btn-lg">ver produto</a></h3></td>
+                    <td><h3><a href={% url "delete_product" product.id %} class="btn btn-outline-danger btn-lg">Delete</a></h3></td>
                 </tr>            
             </tbody>
         {% endfor %}
@@ -68,7 +66,7 @@
 
 
     {% comment %}  {% endcomment %}
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,6 +90,35 @@
             </div>
         </div>
     </div>
+
+    {% comment %}  {% endcomment %}
+    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title titulo" id="exampleModalLabel">Cadastrar empresa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">               
+                    <br>  
+                    
+                    <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+                    <a>teste</a>
+                    <div class="col-md-6">
+                        <img src="{{ product.image.url }}">
+                        
+                        <input type="submit" class="btn btn-info btn-lg" >
+                    </div>                  
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 
         
 {% endblock%}

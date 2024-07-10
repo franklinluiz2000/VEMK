@@ -58,8 +58,7 @@ def company_data(request, id=None):
             }
             return render(request, template_name="company_data.html", context=context)
     
-    # Se a requisição for post validar o formulario  
-    
+    # Se a requisição for post validar o formulario      
     elif request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
@@ -79,3 +78,44 @@ def company_data(request, id=None):
     } 
 
     return render(request, 'company_data.html', context=context)
+
+
+
+
+
+def delete_company(request, id=None):
+
+    company = get_object_or_404(Company, id=id)
+
+    if company:
+        company.delete()
+        messages.add_message(request, messages.constants.SUCCESS, f"A empresa {company.name_company} foi removida com sucesso! Volte quando quiser!")
+    elif not company:
+        messages.add_message(request, messages.constants.ERROR, "A Empresa não foi encontrada!")    
+
+    return redirect("/company_list/")
+
+
+def delete_product(request, id=None):
+
+    product = get_object_or_404(Product, id=id)
+
+    if product:
+        product.delete()
+        messages.add_message(request, messages.constants.SUCCESS, f"O {product.product_name} foi removido com sucesso!")
+    elif not product:
+        messages.add_message(request, messages.constants.ERROR, "O produto não foi encontrado!")    
+
+    return redirect("/company_data")
+
+
+def product_view(request, id=None):
+    product = get_object_or_404(Product, id=id)
+    context = {
+        'product': product
+    }
+    if product:
+        return render(request, template_name="product_view.html", context=context)
+    else:
+        messages.add_message(request, messages.constants.ERROR, "O produto não pode ser encontrado")
+        return redirect("/company_data")

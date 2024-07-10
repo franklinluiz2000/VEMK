@@ -5,7 +5,8 @@ body{
 
 .sidebar{
     background-color: #363636;
-    height: 110vh;
+    height: 120vh;
+    background-image: url('static/authentication/img/caixa.png');
 }
 
 
@@ -14,14 +15,13 @@ body{
 }
 
 .img_logo_sidebar{
-    width: 100%;
- 
+    width: 150%; 
 
 }
 
 .sidebar{
 
-    {% comment %} background-image: url("/static/autenticacao/img/fundo_background.png"); {% endcomment %}
+    {% comment %} background-image: url('/static/business/img/caixa.png'); {% endcomment %}
 
 }
 

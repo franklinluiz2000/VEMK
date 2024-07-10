@@ -1,0 +1,31 @@
+{% extends 'base_business.html' %}
+
+{% load static %}
+
+{% block 'business' %}
+<br>
+<br>
+<br>
+
+    <div class="col-md-6">
+            <div >
+                <div>
+                    
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="Imagem do produto">
+                    {% endif %}                               
+                    
+                </div>
+                <br>
+                <p class="dados">Nome do produto: {{product.product_name}}</p>
+                <p class="dados">Valor: {{product.price}}</p>
+                <p class="dados">Categoria: {{product.category}}</p>
+                <p class="dados">Descrição: {{product.description}}</p>
+                <h3><a href={% url "delete_product" product.id %} class="btn btn-outline-info btn-lg">Adicionar ao carrinho</a></h3>
+               
+            </div>
+    </div>
+
+{% endblock%}
+
+

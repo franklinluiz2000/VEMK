@@ -1,6 +1,6 @@
 .card-lateral{
 
-    background-color: #27DB8F;
+    background-color: #8B0000;
     margin-top: 20px;
     padding: 10px;
     color: white;
@@ -23,14 +23,15 @@
 }
 
 #card-business{
-
+    display: grid;
+    place-items: center;
     background-color: #EAEAEA;
     width: 80%;
     box-shadow: 3px 3px 3px gray;
-    padding: 20px;
     color: black;
-
+    
 }
+
 
 .link-hover:hover{
     text-decoration: none;
@@ -78,3 +79,4 @@
     object-fit: cover;
     object-position: bottom;
 }
+
