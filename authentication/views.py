@@ -9,12 +9,6 @@ from .models import Activation
 from hashlib import sha256
 import os
 
-
-def home(request):
-    name = request.user
-    return HttpResponse(f"<h1>Página Inicial {name}</h1>")
-
-
 def register(request):
   
     if request.method == "GET":
@@ -70,7 +64,7 @@ def login(request):
             return redirect('/auth/login')
         else:
             auth.login(request, user)
-            return redirect('/company_list')
+            return redirect('/home')
     pass
 
 def logout(request):

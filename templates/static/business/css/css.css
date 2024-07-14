@@ -80,3 +80,12 @@
     object-position: bottom;
 }
 
+#card-product{
+    display: grid;
+    place-items: center;
+    background-color: #EAEAEA;
+    width: 80%;
+    box-shadow: 3px 3px 3px gray;
+    color: black;
+    
+}

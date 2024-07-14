@@ -1,0 +1,101 @@
+{% extends 'base_business.html' %}
+
+{% load static %}
+
+{% block 'business' %}
+<br>
+<h1 id="title">PRODUTOS CADASTRADOS</h1>
+<hr>
+
+<style>
+
+#title {
+    text-align: center;
+}
+
+.container {
+    width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.campo-busca {
+    width: 83%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.btn-busca {
+    float: right;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: inline;
+}
+
+
+.icone-lupa {
+    font-size: 20px;
+}
+
+</style>
+
+
+
+{% if messages %}
+<br>
+    {% for message in messages %}
+        <div class="alert {{message.tags}}">
+            {{message}}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container">
+
+    
+    <form method="POST" action={% url "search_product" %}>{% csrf_token %}        
+        <input name="search" type="text" class="campo-busca" placeholder="Digite sua pesquisa">
+        <button type="submit" class="btn-busca">Pesquisar
+            <svg width="16" height="16" fill="currentColor" class="bi bi-search">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+        </button>
+    </form>
+</div>
+
+<br>
+<br>
+
+        
+<div class="row">
+    {% for product in products %}
+        <div class="col-md-2" style="margin: -15px -20px -15px -20px;">
+            <a href="{% url 'product_view' product.id  %}" class="link-hover">
+                <div id="card-business" >
+                    <div class="foto-perfil" >
+                        
+                        {% if product.image %}
+                            <img height="80" weight="80" style="margin: 10px 10px 10px 10px;" src="{{ product.image.url }}" alt="Imagem do meu produto">
+                        {% endif %}                                                         
+                        
+                    </div>
+                    <br>
+                    <p class="dados">{{product.product_name}}</p>
+                    <p class="dados">R${{product.price}}0</p>
+                    
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+    
+  {% endblock%}
+  
+  
+  

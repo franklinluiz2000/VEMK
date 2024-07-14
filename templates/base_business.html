@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2">
-                <a href="{% url 'companys' %}" class="link-lateral">
+                <a href="{% url 'home' %}" class="link-lateral">
                     <div class="card-lateral">
                         <img width="150" height="150" src="{% static 'business/img/home.png' %}">
                         <br>
@@ -22,13 +22,13 @@
                     </div>
                   </a>
                   
-                  <a href="" class="link-lateral">
+                  <a href="{% url 'companys' %}" class="link-lateral">
                     <div class="card-lateral">
                         <img width="150" height="150" src="{% static 'business/img/uniao2.png' %}">
                         <br>
                         <br>
                   
-                        <h2>Empresa</h2>
+                        <h2>Minhas Empresas</h2>
                     </div>
                   </a>
                   

@@ -6,6 +6,33 @@ from .models import Company, Product, Category
 from django.contrib import messages
 from .forms import ProductForm, CompanyForm
 
+@login_required(login_url='/auth/login')
+def home(request):
+    products = Product.objects.all()
+
+    context = {
+        'products': products
+    }
+
+    return render(request, template_name='home.html', context=context)
+
+def search_product(request):
+
+    name_search = request.POST.get("search")
+    print(name_search)
+    products = Product.objects.filter(product_name__contains=name_search)
+    
+    context = {
+        'products': products
+    }
+
+    if products:
+        return render(request, template_name='home.html', context=context)
+    else:
+        messages.add_message(request, messages.constants.ERROR, f"O produto {name_search} não existe")
+        return redirect('/home')
+
+
 
 @login_required(login_url='/auth/login/')
 def company_list(request):    

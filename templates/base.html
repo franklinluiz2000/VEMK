@@ -11,11 +11,31 @@
     </head>
   <body style="background-color: #D3D3D3;">
     {% if user.is_authenticated %}
-      <nav style="background-color: #8B0000;" class="navbar navbar-expand-lg navbar-dark">
-        <a style="font-weight: bold" class="navbar-brand" href="#">VEMK on</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button> 
+      <nav style="background-color: #8B0000;"  class="navbar justify-content-end navbar-expand-lg">
+          
+          <ul class="nav">
+              <li class="nav-item"><a class="nav-link" href="/">
+              <i class="fa fa-home"></i> Home</a></li>
+
+              {% if user.is_authenticated %}
+                 
+                  <li class="nav-item"><a class="nav-link" href="#">
+                  <i class="fa fa-user"></i> Perfil</a></li>                                    
+                  <li class="nav-item"><a class="nav-link" href="#">
+                  <i class="fa fa-edit"></i> Editar Perfil</a></li>
+                  <li class="nav-item"><a class="nav-link" href={% url "logout" %}>
+                  <i class="fa fa-sign-out"></i> Sair</a></li>
+
+              {% else %}
+              
+                  <li class="nav-item"><a class="nav-link" href={% url "login" %}>
+                  <i class="fa fa-sign-in"></i> Entrar</a></li>
+                  <li class="nav-item"><a class="nav-link" href={% url "register" %}>
+                  <i class="fa fa-edit"></i> Registrar</a></li>
+
+              {% endif %}
+          </ul>
+      
       </nav>
     {% endif %}
 
